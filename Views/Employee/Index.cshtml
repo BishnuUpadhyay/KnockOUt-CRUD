@@ -1,0 +1,115 @@
+﻿
+
+<button type="button" data-backdrop="static"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Register Employee
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Register Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12  border-2 " style="border:2px solid #74777a; padding-top:40px">
+                        <div class="card-header text-align-center text-secondary"> New Employee </div>
+                        <div class="card-body" data-bind="with:NewEmployee">
+                            <div class="form-group">
+                                <label for="fullname">First Name</label>
+                                <input class="form-control" name="fullname" data-bind="value:fullname" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender</label><br />
+                                <input type="radio" name="gender" value="Male" data-bind="checked:gender" /> Male
+                                <input type="radio" name="gender" value="Female" data-bind="checked:gender" /> Female
+                            </div>
+                            <div class="form-group">
+                                <label for="hiredate">Hire Date</label>
+                                <input type="datetime-local" name="hiredate" class="form-control" data-bind="value:hireddate" />
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input name="address" class="form-control" data-bind="value:address" />
+                            </div>
+                            <div class="form-group">
+                                <label for="branch">Branch</label>
+                                <select data-bind="options: $root.Branchs, value: branch,optionsCaption: 'Choose Branch...'" class="form-control">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="salary">Salary</label>
+                                <input name="salary" class="form-control" data-bind="value:salary" />
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" data-bs-dismiss="modal" data-bind="click:$root.AddEmployee"><span data-bind="ifnot:IsUpdated">Add</span><span data-bind="if:IsUpdated">Update</span></button>
+                            <button class="btn btn-primary" data-bind="click:$root.resetForm">Reset</button>
+                        </div>
+                        <br /><br />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="d-flex justify-content-between">
+<div>
+    <h1>Employee Details</h1>
+</div>
+
+<div>
+        <input type="text" data-bind="value:searchTerm" /><h5 class="btn btn-secondary mx-3" data-bind="click:$root.clickedSearch">Search </h5>
+</div>
+
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>SN</th>
+            <th>Full Name</th>
+            <th>Gender</th>
+            <th>Hired Date</th>
+            <th>Address</th>
+            <th>Branch</th>
+            <th>Salary</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+  
+<tbody data-bind="foreach:Employees">
+    <tr>
+            <td data-bind="text:$index()+$root.skipCount()+1"></td>
+            <td data-bind="text:fullname"></td>
+        <td data-bind="text:gender"></td>
+            <td data-bind="text:hireddate"></td>
+        <td data-bind="text:address"></td>
+        <td data-bind="text:branch"></td>
+        <td data-bind="text:salary"></td>
+        <td>
+            <div class="btn-group btn-group-sm">
+                    <button data-bind="click:$parent.SelectEmployee" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                    <button data-bind="click:$root.DeleteEmployee" class="btn btn-sm btn-danger"> Delete</button>
+            </div>
+
+        </td>
+</tr>
+</tbody>
+</table>
+<button class="inline-block" data-bind="click:$root.PreviousData">Previous</button>
+<button class="inline-block" data-bind="click:$root.NextData">Next</button>
+
+@section Scripts{
+    <script src="~/js/knockout.js"></script>
+    <script src="~/js/application/employee/employee.model.js"></script>
+    <script src="~/js/application/employee/employee.controller.js"></script>
+    <script>
+       ko.applyBindings(new EmployeeController());
+    </script>
+}
