@@ -9,17 +9,20 @@ var EmployeeController = function (prop) {
     self.NewEmployee = ko.observable(new EmployeeModel());
     self.mode = ko.observable(mode.create);
     self.IsUpdated = ko.observable(false);
+   // self.IsPageFirst = ko.observable(false);
     self.skipCount = ko.observable(0);
     self.take = ko.observable(5);
     self.searchTerm = ko.observable("");
     console.log(this.searchTerm);
     self.Branchs = ko.observableArray(["Kathmandu", "Baglung", "Lalitpur", "Bhaktapur"]);
 
+    var departmentController = new DepartmentController();
+    // Assign the departments from DepartmentController to the EmployeeController
+    self.departments = departmentController.departments;
 
     self.getData = function () {
         ajax.get(baseUrl + "?skipCount=" + ko.toJS(self.skipCount()) + "&take=" + ko.toJS(self.take())+ "&search=" + ko.toJS(self.searchTerm())).then(function (result) {
             self.Employees(result);
-            
             var datas = ko.utils.arrayMap(result, function (item) {
                 return new EmployeeModel(item);
             })
@@ -32,17 +35,19 @@ var EmployeeController = function (prop) {
     self.AddEmployee = function () {
         switch (self.mode()) {
             case 1:
-                ajax.post(baseUrl, ko.toJSON(new self.NewEmployee()))
-                    .done((result) => {
-                        self.Employees.push(new EmployeeModel(result));
-                        self.resetForm();
-                    }).fail((err) => {
-                        console.log(err);
-                    });
+                console.log(ko.toJSON(self.NewEmployee()));
+                ajax.post(baseUrl, ko.toJSON(self.NewEmployee()))
+                    .done(
+                        (result) => {
+                            self.Employees.push(new EmployeeModel(result));
+                            self.resetForm();
+                        }).fail((err) => {
+                            console.log(err);
+                        });
                 break;
             default:
-                ajax.put(baseUrl + '/' + self.NewEmployee().id(), ko.toJSON(self.NewEmployee()))
-                    .done((result) => {
+                ajax.put(baseUrl + "/" + self.NewEmployee().id(), ko.toJSON(self.NewEmployee())).done(
+                    (result) => {
                         self.Employees.replace(self.SelectedEmployee(), self.NewEmployee());
                         self.resetForm();
                     });
@@ -74,9 +79,14 @@ var EmployeeController = function (prop) {
         self.getData()
         
     }
+    self.ClosedModel = function () {
+        self.resetForm();
+    }
     self.NextData = function () {
         //self.skipCount(self.skipCount() + 1);
         self.skipCount(self.skipCount() + 5);
+        console.log(self.skipCount());
+        var employeelength = self.Employees().length + 5;
         self.getData()
     }
 
@@ -112,7 +122,6 @@ var EmployeeController = function (prop) {
                 data: (data)
             });
         },
-
         put: function (url, data) {
             return $.ajax({
                 headers: {

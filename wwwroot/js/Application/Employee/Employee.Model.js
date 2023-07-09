@@ -10,5 +10,6 @@ var EmployeeModel = function (item) {
     self.hireddate = ko.observable(item.hireddate || "");
     self.address = ko.observable(item.address || "");
     self.branch = ko.observable(item.branch || "");
-    self.salary = ko.observable(item.salary || "");
+    self.salary = ko.observable(item.salary || ""); 
+    self.departmentId = ko.observable(item.departmentId || 0); 
 }

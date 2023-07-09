@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Models
 {
@@ -18,6 +19,10 @@ namespace WebApplication1.Models
         [RegularExpression("([1-9][0-9]*)",ErrorMessage ="Please Enter valid amount of Salary")]
         [MinLength(4)]
         public string Salary { get; set; }
+
+        public int? DepartmentId  { get; set; }
+        [ForeignKey("DepartmentId")]
+        public DepartmentModel Departments { get; set; }
     }
 }
 

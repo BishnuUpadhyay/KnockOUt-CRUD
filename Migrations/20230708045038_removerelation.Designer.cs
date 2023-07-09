@@ -12,8 +12,8 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230703095353_salary")]
-    partial class salary
+    [Migration("20230708045038_removerelation")]
+    partial class removerelation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,23 @@ namespace WebApplication1.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("WebApplication1.Models.DepartmentModel", b =>
+                {
+                    b.Property<int>("departmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("departmentId"));
+
+                    b.Property<string>("departmentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("departmentId");
+
+                    b.ToTable("Departments");
+                });
 
             modelBuilder.Entity("WebApplication1.Models.EmployeeModel", b =>
                 {
@@ -41,6 +58,9 @@ namespace WebApplication1.Migrations
                     b.Property<string>("Branch")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Fullname")
                         .IsRequired()
@@ -60,7 +80,18 @@ namespace WebApplication1.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.EmployeeModel", b =>
+                {
+                    b.HasOne("WebApplication1.Models.DepartmentModel", "Departments")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
+
+                    b.Navigation("Departments");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,12 +4,12 @@
     Register Employee
 </button>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Register Employee</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button data-bind="click:$root.ClosedModel" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -41,6 +41,14 @@
                             <div class="form-group">
                                 <label for="salary">Salary</label>
                                 <input name="salary" class="form-control" data-bind="value:salary" />
+                            </div>
+                                 <div class="form-group">
+                                <label for="DepartmentID">Department</label>
+                                <select name="DepartmentID" class="form-control" data-bind="options: $root.departments,
+                                                                                            optionsText: 'departmentName',
+                                                                                             optionsValue: 'departmentId',
+                                                                                            value: departmentId"></select>
+                                @*<input name="DepartmentID" class="form-control" data-bind="value:departmentId" />*@
                             </div>
                         </div>
                         <div class="card-footer">
@@ -102,14 +110,17 @@
 </tr>
 </tbody>
 </table>
-<button class="inline-block" data-bind="click:$root.PreviousData">Previous</button>
-<button class="inline-block" data-bind="click:$root.NextData">Next</button>
+<button class="inline-block" data-bind="click:$root.PreviousData,visible:skipCount() > 0">Previous</button>
+<button class="inline-block" data-bind="click:$root.NextData,hidden:Employees().length < 5">Next</button>
 
 @section Scripts{
     <script src="~/js/knockout.js"></script>
     <script src="~/js/application/employee/employee.model.js"></script>
     <script src="~/js/application/employee/employee.controller.js"></script>
+    <script src="~/js/application/department/deparment.model.js"></script>
+    <script src="~/js/application/department/department.controller.js"></script>
     <script>
-       ko.applyBindings(new EmployeeController());
+        var obj = new  EmployeeController();
+       ko.applyBindings(obj);
     </script>
 }
